@@ -4,6 +4,21 @@ html, body, .screen, .row, .col {
   padding: 0 !important;
 }
 
-#c1 {
-  background-color: beige;
+.image-container{
+  position: relative;
+  width: 15%;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+img {
+  opacity: 0.5;
+  max-width: 100%;
+  margin: 15%;
+}
+
+img:hover {
+  opacity: 1;
 }
