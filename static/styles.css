@@ -20,4 +20,8 @@ img {
 
 img:hover {
   opacity: 1;
+}
+
+.image-container {
+  display: none;
 }/*# sourceMappingURL=styles.css.map */
