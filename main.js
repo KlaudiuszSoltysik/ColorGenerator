@@ -49,12 +49,21 @@ function getRandomColor() {
 }
 
 function addColumn(id) {
-    colors.splice(id + 1, 0, empty.pop());
-    colors[id + 1].style.display = "initial";
-    console.log(colors);
+    if(id = colors.length - 1) {
+        colors.push(empty.pop());
+        colors[id + 1].style.display = "initial";
+        colors[id + 1].style.backgroundColor = getRandomColor();
+    } else {
+        colors.splice(id + 1, 0, empty.pop());
+        colors[id + 1].style.display = "initial";
+        colors[id + 1].style.backgroundColor = colors[colors.length - 1].style.backgroundColor;
+        
+        for(let i = colors.length - 1; i > id + 1; i--) {
+            colors[i].style.backgroundColor = colors[i - 1].style.backgroundColor;
+        }
+
+        colors[id + 2].style.backgroundColor = getRandomColor();
+    }
 
     setOnClick(); 
-    colors[3].style.backgroundColor = colors[3 - 1].style.backgroundColor;
-    colors[2].style.backgroundColor = colors[2 - 1].style.backgroundColor;   
-    colors[1].style.backgroundColor = "#FFFFFF";
 }
