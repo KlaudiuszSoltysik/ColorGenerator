@@ -5,6 +5,7 @@ html, body, .screen, .row, .col {
 }
 
 .image-container {
+  display: none;
   position: relative;
   width: 15%;
   top: 50%;
@@ -20,10 +21,6 @@ img {
 
 img:hover {
   opacity: 1;
-}
-
-.image-container {
-  display: none;
 }
 
 .minus {

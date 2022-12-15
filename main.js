@@ -9,7 +9,7 @@ document.getElementsByTagName("body")[0].addEventListener("keydown", function(ev
     }
 });
 
-//DISPLAYING ICONS ON HOVER
+//DISPLAYING ICONS ON HOVER EVENT HANDLING
 for(let i = 0; i < columns.length; i++) {
     images.push(document.getElementById(`i${i}`));
 
@@ -22,15 +22,15 @@ for(let i = 0; i < columns.length; i++) {
     });
 }
 
-//HIDING COLUMNS
+//HIDE COLUMNS
 for(let i = 3; i < 6; i++) {
     columns[i].style.display = "none";
     empty.push(columns[i]);
 }
 
-var colors = columns.slice(0, 3);
 
-//SETTING INITIAL CONDITIONS
+//SET INITIAL CONDITIONS
+assignColumns()
 setOnClick();
 randomizeColors();
 
@@ -40,57 +40,64 @@ function setOnClick() {
         colors[i].getElementsByClassName("plus")[0].onclick = function() {
             addColumn(i);
         }
+        colors[i].getElementsByClassName("minus")[0].onclick = function() {
+            removeColumn(i);
+        }
     }
 }
 
 //SHOWING/HIDING BUTTONS LOGIC
 function buttonsLogic() {
-    let plus = document.getElementsByClassName("plus");
     if(colors.length > 5) {
-        for(let i = 0; i < colors.length; i++) {
-            plus[i].style.display = "none";
+        for(color of colors) {
+            color.getElementsByClassName("plus")[0].style.display = "none";
         }
     } else {
-        for(let i = 0; i < colors.length; i++) {
-            plus[i].style.display = "initial";
+        for(color of colors) {
+            color.getElementsByClassName("plus")[0].style.display = "initial";
         }
     }
 
-    let minus = document.getElementsByClassName("minus");
     if(colors.length > 3) {
-        for(let i = 0; i < colors.length; i++) {
-            minus[i].style.display = "initial";
+        for(color of colors) {
+            color.getElementsByClassName("minus")[0].style.display = "initial";
         }
     } else {
-        for(let i = 0; i < colors.length; i++) {
-            minus[i].style.display = "none";
+        for(color of colors) {
+            color.getElementsByClassName("minus")[0].style.display = "none";
+        }
+    }
+}
+
+function assignColumns() {
+    columns = Array.from(document.getElementsByClassName("col"));
+    colors = [];
+    empty = [];
+    for(column of columns) {
+        if(column.style.display == "none") {
+            empty.push(column);
+        } else {
+            colors.push(column);
         }
     }
 }
 
 //HANDLING "ADD COLUMN" BUTTON
 function addColumn(id) {
-    if(colors.length < 6) {
-        if(id == colors.length - 1) {
-            colors.push(empty.pop());
-            colors[id + 1].style.display = "initial";
+    empty[0].style.display = "initial";
+    assignColumns();
+    //colorize(colors[id]);
+    setOnClick();
+    buttonsLogic();
+}
 
-            colorize(colors[id + 1]);
-        } else {
-            colors.splice(id + 1, 0, empty.pop());
-            colors[id + 1].style.display = "initial";
-    
-            colors[id + 1].style.backgroundColor = colors[colors.length - 1].style.backgroundColor;
-            
-            for(let i = colors.length - 1; i > id + 1; i--) {
-                colors[i].style.backgroundColor = colors[i - 1].style.backgroundColor;
-            }
-
-            colorize(colors[id + 2]);
-        }
-        setOnClick();
-        buttonsLogic();
-    }
+//HANDLING "REMOVE COLUMN" BUTTON
+function removeColumn(id) {
+    colors[id].style.backgroundColor = "#FFFFFF";
+    colors[id].style.display = "none";
+    assignColumns();
+    setOnClick();
+    buttonsLogic();
 }
 
 //RANDOMIZING COLORS FOR ALL ACTIVE AND NON-HIDDEN COLUMNS
@@ -118,24 +125,29 @@ function isLight(color) {
     const c_g = parseInt(hex.substring(2, 4), 16);
     const c_b = parseInt(hex.substring(4, 6), 16);
     const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
-    if(brightness > 155) {
+
+    if(brightness > 100) {
         return true
     } else {
         return false
     }
 }
 
+//FUNCTION COLORIZES IT'S INPUT
 function colorize(column) {
     let temp = getRandomColor()
     column.style.backgroundColor = temp;
+    column.getElementsByTagName("h3")[0].innerHTML = temp;
 
     if(isLight(temp)) {
         for(element of column.getElementsByTagName("img")) {
             element.style.filter = "invert(0%) sepia(100%) saturate(29%) hue-rotate(133deg) brightness(93%) contrast(107%)";
         }
+        column.getElementsByTagName("h3")[0].style.color = "#000000";
     } else {
         for(element of column.getElementsByTagName("img")) {
             element.style.filter = "invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%)";
         }
+        column.getElementsByTagName("h3")[0].style.color = "#FFFFFF";
     }    
 }
