@@ -1,4 +1,5 @@
 var columns = Array.from(document.getElementsByClassName("col"));
+var lock = [false, false, false, false, false, false];
 var empty = [];
 var images = [];
 
@@ -14,7 +15,7 @@ for(let i = 0; i < columns.length; i++) {
     images.push(document.getElementById(`i${i}`));
 
     columns[i].addEventListener("mouseover", function handleMouseOver() {
-        images[i].style.display = "block";
+        images[i].style.display = "initial";
     });
 
     columns[i].addEventListener("mouseout", function handleMouseOut() {
@@ -27,7 +28,6 @@ for(let i = 3; i < 6; i++) {
     columns[i].style.display = "none";
     empty.push(columns[i]);
 }
-
 
 //SET INITIAL CONDITIONS
 assignColumns()
@@ -42,6 +42,9 @@ function setOnClick() {
         }
         colors[i].getElementsByClassName("minus")[0].onclick = function() {
             removeColumn(i);
+        }
+        colors[i].getElementsByClassName("lock")[0].onclick = function() {
+            toggleLock(i);
         }
     }
 }
@@ -69,6 +72,7 @@ function buttonsLogic() {
     }
 }
 
+//REASIGNS ARRAYS TO CONTAIN ALL COLUMNS FROM LEFT TO RIGHT
 function assignColumns() {
     columns = Array.from(document.getElementsByClassName("col"));
     colors = [];
@@ -82,11 +86,23 @@ function assignColumns() {
     }
 }
 
+//LOCKS OR UNLOCKS COLOR CHANGE
+function toggleLock(id) {
+    console.log(id)
+    lock[id] = !lock[id];
+
+    if(lock[id]) {
+        colors[id].getElementsByClassName("lock")[0].src = "static/icons/unlock.png";
+    } else {
+        colors[id].getElementsByClassName("lock")[0].src = "static/icons/lock.png";
+    }
+}
+
 //HANDLING "ADD COLUMN" BUTTON
 function addColumn(id) {
-    empty[0].style.display = "initial";
+    empty[0].style.display = "flex";
     assignColumns();
-    //colorize(colors[id]);
+    colorize(colors[colors.length - 1]);
     setOnClick();
     buttonsLogic();
 }
@@ -95,6 +111,7 @@ function addColumn(id) {
 function removeColumn(id) {
     colors[id].style.backgroundColor = "#FFFFFF";
     colors[id].style.display = "none";
+    lock[id] = false;
     assignColumns();
     setOnClick();
     buttonsLogic();
@@ -103,7 +120,9 @@ function removeColumn(id) {
 //RANDOMIZING COLORS FOR ALL ACTIVE AND NON-HIDDEN COLUMNS
 function randomizeColors() {
     for(let i = 0; i < colors.length; i++) {
-        colorize(colors[i]);
+        if(!lock[i]) {
+            colorize(colors[i]);
+        }
     }
 }
 
@@ -137,17 +156,17 @@ function isLight(color) {
 function colorize(column) {
     let temp = getRandomColor()
     column.style.backgroundColor = temp;
-    column.getElementsByTagName("h3")[0].innerHTML = temp;
+    column.getElementsByTagName("h2")[0].innerHTML = temp;
 
     if(isLight(temp)) {
         for(element of column.getElementsByTagName("img")) {
             element.style.filter = "invert(0%) sepia(100%) saturate(29%) hue-rotate(133deg) brightness(93%) contrast(107%)";
         }
-        column.getElementsByTagName("h3")[0].style.color = "#000000";
+        column.getElementsByTagName("h2")[0].style.color = "#000000";
     } else {
         for(element of column.getElementsByTagName("img")) {
             element.style.filter = "invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%)";
         }
-        column.getElementsByTagName("h3")[0].style.color = "#FFFFFF";
+        column.getElementsByTagName("h2")[0].style.color = "#FFFFFF";
     }    
 }
