@@ -1,5 +1,5 @@
 var columns = Array.from(document.getElementsByClassName("col"));
-var lock = [false, false, false, false, false, false];
+var lock = [];
 var empty = [];
 var images = [];
 
@@ -13,6 +13,7 @@ document.getElementsByTagName("body")[0].addEventListener("keydown", function(ev
 //DISPLAYING ICONS ON HOVER EVENT HANDLING
 for(let i = 0; i < columns.length; i++) {
     images.push(document.getElementById(`i${i}`));
+    lock.push(false);
 
     columns[i].addEventListener("mouseover", function handleMouseOver() {
         images[i].style.display = "initial";
@@ -88,9 +89,7 @@ function assignColumns() {
 
 //LOCKS OR UNLOCKS COLOR CHANGE
 function toggleLock(id) {
-    console.log(id)
-    lock[id] = !lock[id];
-
+    lock[id] = !lock[id]
     if(lock[id]) {
         colors[id].getElementsByClassName("lock")[0].src = "static/icons/unlock.png";
     } else {
@@ -102,7 +101,14 @@ function toggleLock(id) {
 function addColumn(id) {
     empty[0].style.display = "flex";
     assignColumns();
+
+    let content = colors[colors.length - 1];
+    let parent = content.parentNode;
+    parent.insertBefore(content, parent.getElementsByClassName("col")[id + 1]);
+    lock.splice(id + 1, 0, lock.pop())
+    
     colorize(colors[colors.length - 1]);
+    assignColumns();  
     setOnClick();
     buttonsLogic();
 }
@@ -112,6 +118,7 @@ function removeColumn(id) {
     colors[id].style.backgroundColor = "#FFFFFF";
     colors[id].style.display = "none";
     lock[id] = false;
+    lock.push(lock.pop(id));
     assignColumns();
     setOnClick();
     buttonsLogic();
