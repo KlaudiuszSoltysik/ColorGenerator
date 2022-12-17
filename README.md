@@ -1,6 +1,6 @@
 # Color app:
 ## App description:
-Simple website made to generate color palettes, user may use for their designs. For best experience use from desktop.
+Simple website made to generate color palettes, user may use for their designs. For best experience use from desktop. Be aware this is not completely bug free version, but is's mostly done. 
 ## Inspiration:
 App inspirated by coolors.co website.    
 ![image](https://user-images.githubusercontent.com/109976941/207610474-f5780a07-082c-415e-8e09-7cdc3f3f6867.png)
