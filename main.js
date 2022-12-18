@@ -78,6 +78,7 @@ function assignColumns() {
     columns = Array.from(document.getElementsByClassName("col"));
     colors = [];
     empty = [];
+
     for(column of columns) {
         if(column.style.display == "none") {
             empty.push(column);
@@ -103,11 +104,11 @@ function addColumn(id) {
     assignColumns();
 
     let content = colors[colors.length - 1];
+    colorize(content);
     let parent = content.parentNode;
     parent.insertBefore(content, parent.getElementsByClassName("col")[id + 1]);
     lock.splice(id + 1, 0, lock.pop())
     
-    colorize(colors[colors.length - 1]);
     assignColumns();  
     setOnClick();
     buttonsLogic();
@@ -115,10 +116,15 @@ function addColumn(id) {
 
 //HANDLING "REMOVE COLUMN" BUTTON
 function removeColumn(id) {
-    colors[id].style.backgroundColor = "#FFFFFF";
-    colors[id].style.display = "none";
-    lock[id] = false;
-    lock.push(lock.pop(id));
+    let content = colors[id];
+    let parent = content.parentNode;
+
+    content.style.backgroundColor = "#FFFFFF";
+    content.style.display = "none";
+    lock.splice(id, 1);
+    lock.push(false);
+
+    parent.appendChild(content);
     assignColumns();
     setOnClick();
     buttonsLogic();
